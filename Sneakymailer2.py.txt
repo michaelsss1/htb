@@ -1,0 +1,31 @@
+import smtplib
+
+def getEmails(filename):
+	emails = []
+	with open(filename, 'r') as f:
+		for email in f:
+			emails.append(email.strip())
+	return emails
+
+
+emails = getEmails('maillist')
+message = """
+MIME-Version: 1.0
+Content-type: text/html
+Subject: report
+
+<a href="url">report link/a>
+"""
+for sender in emails:
+	for receiver in emails:
+		if sender == receiver:
+			print(f"[-] {sender}")
+			break
+		else:
+			try:
+				smtpObj = smtplib.SMTP('10.10.10.197')
+				print('[+]send email from %s to %s.....' %(sender, receiver))
+				smtpObj.sendmail(sender, receiver, message)
+				print("[+]Successfully sent email")
+			except SMTPException:
+				print("[-]Error: unable to send email")
